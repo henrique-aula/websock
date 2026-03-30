@@ -1,0 +1,4 @@
+start cmd /k "cd server && dotnet run"
+start cmd /k "cd client && dotnet run"
+start cmd /k "cd client && dotnet run"
+start cmd /k "cd client && dotnet run"
