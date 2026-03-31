@@ -9,6 +9,24 @@ class Program
     private static ConcurrentDictionary<string, WebSocket> _clients = new();
 
 
+
+    static async Task MessageClientAsync(string id, WebSocket webSocket)
+    {
+        try
+        {
+            byte[] response = Encoding.UTF8.GetBytes($"você é {id}");
+            await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
+
+            while (true)
+            {
+            }
+        }
+        catch
+        {
+
+        }
+    }
+
     static async Task HandleClientAsync(string id, WebSocket webSocket)
     {
         var buffer = new byte[1024];
@@ -17,7 +35,7 @@ class Program
             while (webSocket.State == WebSocketState.Open)
             {
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                
+
                 if (result.MessageType == WebSocketMessageType.Close) break;
 
 
@@ -32,9 +50,9 @@ class Program
                 else
                 {
                     byte[] response = Encoding.UTF8.GetBytes(message);
-                    await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);    
+                    await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
-                
+
             }
         }
         catch (Exception ex)
@@ -72,9 +90,10 @@ class Program
                 var wsContext = await context.AcceptWebSocketAsync(null);
                 string clientID = Guid.NewGuid().ToString();
 
+                Console.WriteLine($"novo cliente: {clientID}");
                 _clients.TryAdd(clientID, wsContext.WebSocket);
                 Task.Run(() => HandleClientAsync(clientID, wsContext.WebSocket));
-                Console.WriteLine($"novo cliente: {clientID}");
+                Task.Run(() => MessageClientAsync(clientID, wsContext.WebSocket));
             }
         }
     }
