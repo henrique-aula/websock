@@ -9,6 +9,28 @@ class Program
     private static ConcurrentDictionary<string, WebSocket> _clients = new();
 
 
+
+    static async Task SendClientMessage(string id, WebSocket webSocket)
+    {
+        try
+        {
+            while (webSocket.State == WebSocketState.Open)
+            {
+                byte[] response = Encoding.UTF8.GetBytes("porra");
+                await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None); 
+            }
+        }
+        catch
+        {
+            
+        }
+        finally
+        {
+            
+        }
+    }
+
+
     static async Task HandleClientAsync(string id, WebSocket webSocket)
     {
         var buffer = new byte[1024];
@@ -17,16 +39,24 @@ class Program
             while (webSocket.State == WebSocketState.Open)
             {
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                
+
                 if (result.MessageType == WebSocketMessageType.Close) break;
 
 
                 string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 Console.WriteLine($"{id}: {message}");
 
-                byte[] response = Encoding.UTF8.GetBytes(message);
+                if (message == "jogar")
+                {
+                    byte[] response = Encoding.UTF8.GetBytes("jogará.");
+                    await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+                else
+                {
+                    byte[] response = Encoding.UTF8.GetBytes(message);
+                    await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
 
-                await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
 
             }
         }
@@ -66,7 +96,9 @@ class Program
                 string clientID = Guid.NewGuid().ToString();
 
                 _clients.TryAdd(clientID, wsContext.WebSocket);
-                Task.Run(() => HandleClientAsync(clientID, wsContext.WebSocket));
+
+                await Task.Run(() => SendClientMessage(clientID, wsContext.WebSocket));
+                await Task.Run(() => HandleClientAsync(clientID, wsContext.WebSocket));
                 Console.WriteLine($"novo cliente: {clientID}");
             }
         }
