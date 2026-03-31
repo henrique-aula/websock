@@ -16,7 +16,7 @@ class Program
         {
             while (webSocket.State == WebSocketState.Open)
             {
-                byte[] response = Encoding.UTF8.GetBytes("porra");
+                byte[] response = Encoding.UTF8.GetBytes("merda");
                 await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None); 
             }
         }
