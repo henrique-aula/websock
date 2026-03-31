@@ -5,7 +5,7 @@ using System.Text;
 Console.Write("CLIENTE ");
 
 using var ws = new ClientWebSocket();
-await ws.ConnectAsync(new Uri("ws://localhost:8080/"), CancellationToken.None);
+await ws.ConnectAsync(new Uri("ws://localhost:5050/"), CancellationToken.None);
 Console.WriteLine("conectado");
 
 var sendTask = Task.Run(async () =>

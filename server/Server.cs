@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 class Program
 {
-    
+
     private static ConcurrentDictionary<string, WebSocket> _clients = new();
 
 
@@ -14,19 +14,19 @@ class Program
     {
         try
         {
-            while (webSocket.State == WebSocketState.Open)
-            {
-                byte[] response = Encoding.UTF8.GetBytes("merda");
-                await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None); 
-            }
+            // while (webSocket.State == WebSocketState.Open)
+            // {
+            //     byte[] response = Encoding.UTF8.GetBytes("merda");
+            //     await webSocket.SendAsync(new ArraySegment<byte>(response), WebSocketMessageType.Text, true, CancellationToken.None);
+            // }
         }
         catch
         {
-            
+
         }
         finally
         {
-            
+
         }
     }
 
@@ -75,15 +75,15 @@ class Program
     }
 
 
-    
+
     static async Task Main()
     {
         Console.Write("SERVIDOR ");
 
         var listener = new HttpListener();
-        listener.Prefixes.Add("http://localhost:8080/");
+        listener.Prefixes.Add("http://10.62.206.38:5000/");
         listener.Start();
-        
+
         Console.WriteLine("ligado");
 
 
@@ -104,7 +104,7 @@ class Program
         }
     }
 
-    
+
 
 
 
