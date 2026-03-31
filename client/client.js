@@ -1,30 +1,31 @@
-const WebSocket = require("ws");
-
+let sock;
 function ligar(){
-    const sock = new WebSocket("ws://localhost:8080"); 
+    sock = new WebSocket("ws://localhost:8080"); 
 
-    sock.on("open", () => {
-        console.log("conectado");
+    sock.onopen = () => {
         sock.send("wow");
-    });     
+    }; 
 
-    sock.on("message", (data) => {
-        console.log("server:", data.toString());
-    });
+    sock.onmessage = (event) => {
+        resposta.textContent = event.data.toString();
+    };
 
-    sock.on("error", (erro) => {
-        //console.error("erro", erro.message);
-    });
+    sock.onerror = (erro) => {
+        console.error("erro");
+    };
 
-    sock.on("close", () => {
-        //console.log("morri");
-
-        setTimeout(() => {
-            ligar();
-        }, 200);
-    });
-
-    return sock;
+    sock.onclose = () => {
+        setTimeout(ligar, 200);
+    };
 }
-
 ligar();
+
+
+
+const botao = document.getElementById("butao");
+const input = document.getElementById("input");
+const resposta = document.getElementById("resposta");
+
+botao.addEventListener("click", () => {
+    sock.send(input.value);
+});
