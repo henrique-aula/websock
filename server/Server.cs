@@ -76,7 +76,7 @@ class Program
         Console.Write("SERVIDOR ");
 
         var listener = new HttpListener();
-        listener.Prefixes.Add("http://10.62.206.38:8080/");
+        listener.Prefixes.Add("http://localhost:8080/");
         listener.Start();
         
         Console.WriteLine("ligado");
