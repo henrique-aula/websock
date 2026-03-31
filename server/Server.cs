@@ -92,15 +92,9 @@ class Program
 
                 Console.WriteLine($"novo cliente: {clientID}");
                 _clients.TryAdd(clientID, wsContext.WebSocket);
-                Task.Run(() => HandleClientAsync(clientID, wsContext.WebSocket));
-                Task.Run(() => MessageClientAsync(clientID, wsContext.WebSocket));
+                _ = Task.Run(() => HandleClientAsync(clientID, wsContext.WebSocket));
+                _ = Task.Run(() => MessageClientAsync(clientID, wsContext.WebSocket));
             }
         }
     }
-
-    
-
-
-
 }
-

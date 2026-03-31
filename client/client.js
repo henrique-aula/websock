@@ -1,24 +1,32 @@
-const WebSocket = require('ws');
+import WebSocket from "ws";
 
-const socket = new WebSocket("ws://localhost:8080");
+
 
 function ligar(){
-    socket.addEventListener("open", (event) => {
+    const sock = new WebSocket("ws://localhost:8080"); 
+
+    sock.on("open", () => {
         console.log("conectado");
-        socket.send("ok");
+        sock.send("wow");
+    });     
+
+    sock.on("message", (data) => {
+        console.log("server:", data.toString());
     });
 
-    socket.addEventListener("message", (event) => {
-        console.log("server:", event.data);
+    sock.on("error", (erro) => {
+        console.error("erro", erro.message);
     });
 
-    socket.addEventListener("error", (event) => {
-        console.error("erro", event);
-    });
-
-    socket.addEventListener("close", () => {
+    sock.on("close", () => {
         console.log("morri");
+
+        setTimeout(() => {
+            ligar();
+        }, 200);
     });
+
+    return sock;
 }
 
 ligar();
