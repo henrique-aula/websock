@@ -1,6 +1,4 @@
-import WebSocket from "ws";
-
-
+const WebSocket = require("ws");
 
 function ligar(){
     const sock = new WebSocket("ws://localhost:8080"); 
@@ -15,11 +13,11 @@ function ligar(){
     });
 
     sock.on("error", (erro) => {
-        console.error("erro", erro.message);
+        //console.error("erro", erro.message);
     });
 
     sock.on("close", () => {
-        console.log("morri");
+        //console.log("morri");
 
         setTimeout(() => {
             ligar();
